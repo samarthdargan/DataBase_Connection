@@ -1,0 +1,45 @@
+import pyodbc
+import pandas as pd
+cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
+                        "Server=MMT-DSK-7746\SQLEXPRESS;"
+                        "Database=HotelSupply;"
+                        "uid=samarth;pwd=gommt#12345")
+sql = '''SELECT 'MMT' as Brand,  [bkg_mmtcnfmid] as booking_id, Max([medium]) as Platform,Max([BKG_HTLSEQ]) as Hotel_ID,
+ Max([BKG_HTLNAME]) as Hotel_Name ,Max([BKG_CITYNAME]) as City_Name ,Max([BKG_CTYNAME]) as Country_Name,
+ Max([bkg_bkingdt]) as Booking_Date ,Max([BKG_CHKINDT]) as CheckIN_Date,Max([BKG_CHKOUTDT]) as CheckOUT_Date,
+ Max([BKG_TOTRM]) as Rooms,Max([Room_Nights]) as Room_Nights ,Max([BKG_TOTADULTS]) as Adults,Max([BKG_TOTCHLD]) as Childs,
+ Max([bkg_totmmtcustcost_inr]) as [bkg_totmmtcustcost_inr],Max([bkg_rmtpname]) as room_type_name,Max([GMV]) as GMV
+      ,Max([GR]) as GR ,Max([SR]) as SP  ,Max([SP_Before_BS]) as [SP_Before_BS]    ,Max([BDGMV]) as BDGMV   ,Max([BDGR_PreTax]) as BDGR  ,Max([PAH/PAS]) as paymode ,Max([Channel]) as Channel_Type  
+	  ,Max([MonthName]) as [MonthName]  ,Max([YearName]) as [YearName]  ,Max([M_Hotel_Name]) as [M_Hotel_Name]  ,
+	  Max([M_Hotel_City]) as [M_Hotel_City]  ,Max([ParentCity]) as [ParentCity]  ,Max([M_Hotel_Country]) as [M_Hotel_Country]  ,
+	  Max([FocusCity]) as [FocusCity]  ,Max([Status]) as [Status]  ,Max([StarRating]) as [StarRating] ,
+	  Max([ChainType]) as [ChainType]   ,Max([ChainName]) as [ChainName]  ,Max([Channel_Manager]) as [Channel_Manager],
+	  Max([DataSource_ID]) as [DataSource_ID] ,Max([ChainName_Admin]) as [ChainName_Admin] ,Max([DirectConnect]) as [DirectConnect] ,Max([CorpBM]) as [CorpBM] ,Max([CorpZM]) as [CorpZM] ,Max([CorpRH]) as [CorpRH] ,Max([UEBM]) as [UEBM]
+      ,Max([UEZM]) as [UEZM] ,Max([UERH]) as [UERH] ,Max([INGOBMID]) as [INGOBMID] ,Max([INGOZMID]) as [INGOZMID],Max([INGORHID]) as[INGORHID] ,Max([Is_Gold_Hotel]) as [Is_Gold_Hotel] ,Max([Is_Five_Star]) as [Is_Five_Star] ,Max([Is_AltAco]) as [Is_AltAco] ,Max([Altaco_Chain_Name]) as [Altaco_Chain_Name]
+      ,Max([DSS_ID]) as [DSS_ID] ,Max([Tag1]) as [Tag1],Max([Tag2]) as [Tag2] ,Max([Tag3]) as [Tag3],Max([Tag4]) as [Tag4] ,Max([Tag5]) as [Tag5],Max([Tag6]) as [Tag6] ,
+	  Max([Tag7]) as [Tag7] ,Max(C_City_Type) as C_City_Type ,Max(C_Parent_City) as C_Parent_City ,Max(C_ZM) as C_ZM ,Max(C_RH) as C_RH,'1' as Bookings,Max([FinalTop100Cat]) as [FinalTop100Cat] , Max([Set]) as [Set] ,Max([Top 100]) as [Top 100]
+  FROM [HotelSupply].[dbo].[Vi_Int_MMT_Tran] as a
+  where [bkg_bkingdt] between   DATEADD(month, DATEDIFF(month, 0, GETDATE()-1),0) - 8 and GETDATE() -1
+
+  group by [bkg_mmtcnfmid] having Max(GMV) < 10000000 and Max(GMV) > 0
+  Union ALL
+  Select 'GI' as Brand, [bookingid] as booking_id,Max([medium]) as Platform,Max([voyagerhotelid]) as Hotel_ID,
+ Max([T_Hotel_Name]) as Hotel_Name, Max([T_Hotel_City]) as  City_Name, Max([T_Hotel_Country]) as Country_Name,
+ Max([bookingdate]) as Booking_Date,Max([checkin]) as CheckIN_Date, Max([checkout]) as CheckOUT_Date, Max([rooms]) as Rooms, 
+ Max([room_nights]) as Room_Nights,Max([adults]) as Adults,Max([children]) as Childs, Max([netamt]) as [bkg_totmmtcustcost_inr],
+ Max([room_type_name]) as room_type_name,Max([gmv]) as [GMV],Max([Revenue_GPM]) as GR, Max([sales_promotion]) as SP,
+  Max([sales_promotion]) as [SP_Before_BS],Max([BD_TL]) as [BDGMV],Max([BD_GPM_PreTax]) as [BDGR],Max([paymode]),
+  Max([channel_type]) as Channel_Type ,Max([MonthName]) as [MonthName]  ,Max([YearName]) as [YearName]  ,Max([M_Hotel_Name]) as [M_Hotel_Name]  ,
+	  Max([M_Hotel_City]) as [M_Hotel_City]  ,Max([ParentCity]) as [ParentCity]  ,Max([M_Hotel_Country]) as [M_Hotel_Country]  ,
+	  Max([FocusCity]) as [FocusCity]  ,Max([Status]) as [Status]  ,Max([StarRating]) as [StarRating] ,
+	  Max([ChainType]) as [ChainType]   ,Max([ChainName]) as [ChainName]  ,Max([Channel_Manager]) as [Channel_Manager],
+	  Max([DataSource_ID]) as [DataSource_ID] ,Max([ChainName_Admin]) as [ChainName_Admin] ,Max([DirectConnect]) as [DirectConnect] ,Max([CorpBM]) as [CorpBM] ,Max([CorpZM]) as [CorpZM] ,Max([CorpRH]) as [CorpRH] ,Max([UEBM]) as [UEBM]
+      ,Max([UEZM]) as [UEZM] ,Max([UERH]) as [UERH] ,Max([INGOBMID]) as [INGOBMID] ,Max([INGOZMID]) as [INGOZMID],Max([INGORHID]) as[INGORHID] ,Max([Is_Gold_Hotel]) as [Is_Gold_Hotel] ,Max([Is_Five_Star]) as [Is_Five_Star] ,Max([Is_AltAco]) as [Is_AltAco] ,Max([Altaco_Chain_Name]) as [Altaco_Chain_Name]
+      ,Max([DSS_ID]) as [DSS_ID] ,Max([Tag1]) as [Tag1],Max([Tag2]) as [Tag2] ,Max([Tag3]) as [Tag3],Max([Tag4]) as [Tag4] ,Max([Tag5]) as [Tag5],Max([Tag6]) as [Tag6] ,
+	  Max([Tag7]) as [Tag7] ,Max(C_City_Type) as C_City_Type ,Max(C_Parent_City) as C_Parent_City ,Max(C_ZM) as C_ZM ,Max(C_RH) as C_RH ,'1' as Bookings,Max([FinalTop100Cat]) as [FinalTop100Cat] , Max([Set]) as [Set] ,Max([Top 100]) as [Top 100]
+	   FROM [HotelSupply].[dbo].[Vi_Int_GI_Tran]
+where [bookingdate] between   DATEADD(month, DATEDIFF(month, 0, GETDATE()-1),0) - 8 and GETDATE() -1
+  group by [bookingid] having Max(GMV) < 10000000 and Max(GMV) > 0 '''
+  
+df = pd.read_sql_query(sql,cnxn)
+
